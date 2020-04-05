@@ -1,0 +1,23 @@
+body{
+    background-image : linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),url(./../../img/background.jpg);
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+}
+.actions{
+    background-color: #FFC400;
+    margin-top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+.btn:hover{
+    color: black;
+    background-color: #FFAB00;
+}
+.btn{
+    color: black;
+    background-color: #FFC400;
+    text-align: center;
+}
