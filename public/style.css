@@ -1,5 +1,5 @@
 body{
-    background-image : linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),url(./../../img/background.jpg);
+    background-image : linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),url(background.jpg);
     height: 100vh;
     background-size: cover;
     background-position: center;
@@ -20,4 +20,16 @@ body{
     color: black;
     background-color: #FFC400;
     text-align: center;
+}
+.form
+{
+	max-width: 750px;
+	border-radius: 20px;
+	margin: auto;
+	background: #fafafa;
+	box-sizing: border-box;;
+	padding: 40px;
+	color: #fff;
+	opacity: 75%;
+	margin-top: 100px;
 }
