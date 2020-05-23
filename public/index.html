@@ -91,13 +91,12 @@
     <!-- Caption for the site -->
     <div class="userActionsInfo" style="text-align: center;">
         <p>
-            <div
-                style="margin-top: 50px; color: white; font-size: 40px; font-family: 'Courier New'; letter-spacing: 2px;">
-                Test what matters most
-            </div>
-            <div style="color: white; font-size: 20px; font-family: 'Courier New';">
-                Platform for question paper generation
-            </div>
+        <div style="margin-top: 50px; color: white; font-size: 40px; font-family: 'Courier New'; letter-spacing: 2px;">
+            Test what matters most
+        </div>
+        <div style="color: white; font-size: 20px; font-family: 'Courier New';">
+            Platform for question paper generation
+        </div>
         </p>
     </div>
 
@@ -111,11 +110,12 @@
             <div style="margin: 10px;">
                 <a class="waves-effect waves-light btn" onclick="setupAddQuestionUI()">Add Questions</a>
             </div>
-            <!-- <div>
-                <input type="button" class="btn actions" value="Show Questions">
-            </div> -->
             <div style="margin: 10px;">
-                <a class="waves-effect waves-light btn" onclick="setupGenerateQuestionPaperUI()">Generate Question Pape</a>
+                <a class="waves-effect waves-light btn" onclick="setupDownloadQuestionsUI()">Show Questions</a>
+            </div>
+            <div style="margin: 10px;">
+                <a class="waves-effect waves-light btn" onclick="setupGenerateQuestionPaperUI()">Generate Question
+                    Paper</a>
             </div>
             <!-- <div>
                 <input type="button" class="btn actions" value="Refactor Questions">
@@ -187,7 +187,24 @@
                     <input type="text" id="question" placeholder="Enter the question" required />
                 </div>
                 <div class="col s6 offset-l3" style="margin-top: 30px;">
-                    <button class="btn  waves-effect waves-light" type="submit" style="background-color: #e49800;">ADD Question</button>
+                    <button class="btn  waves-effect waves-light" type="submit" style="background-color: #e49800;">ADD
+                        Question</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Download all questions form -->
+    <div class="downloadAllQuestions-action center-align z-depth-0 container form"
+        style="margin-top: 70px;display: none;">
+        <div class="row" style="color: black;">
+            <form id="downloadques">
+                <div class="input-field col s6 offset-13">
+                    <input type="text" id="subject_code" placeholder="Enter the subject code" required />
+                </div>
+                <div class="col s6 offset-l3">
+                    <button class="btn  waves-effect waves-light" type="submit"
+                        style="background-color: #e49800;">Download Questions</button>
                 </div>
             </form>
         </div>
@@ -244,7 +261,8 @@
                     </select>
                 </div>
                 <div class="col s6 offset-l3">
-                    <button class="btn waves-effect waves-light" type="submit" style="background-color: #e49800;">Generate Question Paper</button>
+                    <button class="btn waves-effect waves-light" type="submit"
+                        style="background-color: #e49800;">Generate Question Paper</button>
                 </div>
             </form>
         </div>
@@ -277,8 +295,18 @@
 
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <script src="auth.js"></script>
-    <script src="index.js"></script>
+    <script src="./auth.js"></script>
+    <script src="./index.js"></script>
+    <!-- <script>
+        const setupDownloadQuestionsUI = () => {
+            logout.style.display = 'none';
+            document.querySelector('.userActionsNavigation').style.display = 'block';
+            document.querySelectorAll('.userActionsInfo').forEach(item => item.style.display = 'none');
+            document.querySelector('.addQuestion-action').style.display = 'none';
+            document.querySelector('.downloadAllQuestions-action').style.display = 'block';
+            document.querySelector('.generateQuestionPaper-action').style.display = 'none';
+        }
+    </script> -->
 </body>
 
 </html>

@@ -1,19 +1,19 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-admin.initializeApp();
+// admin.initializeApp();
 
 // for local
-// var serviceAccount = require('./../questionpapergenerator-22e43-firebase-adminsdk-jpw58-4056f6fd97.json');
-// admin.initializeApp({
-//     credential: admin.credential.cert(serviceAccount),
-//     databaseURL: 'https://questionpapergenerator-22e43.firebaseio.com'
-// });
+var serviceAccount = require('./../questionpapergenerator-22e43-firebase-adminsdk-jpw58-4056f6fd97.json');
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: 'https://questionpapergenerator-22e43.firebaseio.com'
+});
 
-exports.fetchPrivateKey = functions.https.onCall(async (data,context)=>{
-    try{
+exports.fetchPrivateKey = functions.https.onCall(async (data, context) => {
+    try {
         let snapshot = await admin.firestore().collection('privateKeys').doc('pD6QX4QzRB9AYezmOi70').get();
         return snapshot.data().key;
-    }catch(err){
+    } catch (err) {
         console.log(err);
         return null;
     }
@@ -35,6 +35,18 @@ exports.addNewQuestion = functions.https.onCall((data, context) => {
     });
 });
 
+// download all questions
+exports.downloadAllQuestions = functions.https.onCall(async (data, context) => {
+    console.log(`called downloadAllQuestions function`);
+    const subjectObject = data.subjectObject;
+    console.log(subjectObject);
+    let questions = `\t\tQUESTIONS\n`;
+    const shortQuestions = await fetchAllQuestionsOfGivenSubjectCodeAndLevel({ queryObject: { 'subject_code': subjectObject.subject_code, 'marks': '2' } });
+    const longQuestions = await fetchAllQuestionsOfGivenSubjectCodeAndLevel({ queryObject: { 'subject_code': subjectObject.subject_code, 'marks': '10' } });
+    questions = questions + 'Short Answers\n' + shortQuestions.join('\n') + '\nLong Answers\n' + longQuestions.join('\n');
+    return questions;
+});
+
 // genrate question paper
 exports.generateQuestionPaper = functions.https.onCall(async (data, context) => {
     console.log(`called generateQuestionPaper function`);
@@ -42,7 +54,7 @@ exports.generateQuestionPaper = functions.https.onCall(async (data, context) => 
     console.log(questionPaperObject);
     let shortQuestions = [];
     let longQuestions = [];
-    let questionPaper = `\t\tCVR College of Engineering\n`
+    let questionPaper = `\t\tCVR College of Engineering\n`;
     if (questionPaperObject.exam_type === 'mid1') {
         const unit_1_2 = await fetchQuestionsOfGivenUnit({ queryObject: { 'subject_code': questionPaperObject.subject_code, 'difficulty_level': questionPaperObject.difficulty_level, 'unit': 'Unit 1', 'marks': '2' } });
         console.log(`unit_1_2:${unit_1_2}`);
@@ -128,7 +140,7 @@ const fetchQuestionsOfGivenUnit = async (data) => {
     console.log(queryObject);
     try {
         let snapshot = await admin.firestore().collection('questions').doc(queryObject.subject_code).collection(queryObject.difficulty_level).doc(queryObject.unit).collection(queryObject.marks).get();
-        console.log('got data');
+        console.log('got data', snapshot.docs);
         let ques = [];
         for (doc of snapshot.docs) {
             ques.push(doc.data());
@@ -144,9 +156,38 @@ const fetchQuestionsOfGivenUnit = async (data) => {
             indexTwo = Math.floor(Math.random() * len);
         } while (indexOne === indexTwo)
         res.push(ques[indexOne].question, ques[indexTwo].question);
+        console.log(res);
         return res;
     } catch (err) {
         console.log(err);
         return null;
     }
+};
+
+// fetch questions for given subject
+const fetchAllQuestionsOfGivenSubjectCodeAndLevel = async (data) => {
+    console.log(`called fetchAllQuestionsOfGivenSubjectCodeAndLevel function`);
+    const queryObject = data.queryObject;
+    console.log(queryObject);
+    const difficulty_levels = ['Easy','Medium','Difficult'];
+    const units = ['Unit 1','Unit 2','Unit 3','Unit 4','Unit 5'];
+    let ques = [];
+    try {
+        for (let i=0; i < difficulty_levels.length;i++){
+            for (let j=0; j < units.length; j++){
+                console.log(difficulty_levels[i], units[j]);
+                let snapshot = await admin.firestore().collection('questions').doc(queryObject.subject_code).collection(difficulty_levels[i]).doc(units[j]).collection(queryObject.marks).get();
+                // let snapshot = await admin.firestore().collection('questions').doc('007').collection('Medium').doc('Unit 1').collection('10').get();
+                console.log('got data', snapshot.docs);
+                for (doc of snapshot.docs) {
+                    console.log('data');
+                    console.log(doc.data().question);
+                    ques.push(doc.data().question);
+                }
+            }
+        }
+    } catch (err) {
+        console.log(err);
+    }
+    return ques;
 };

@@ -1,15 +1,17 @@
+// for local
+firebase.functions().useFunctionsEmulator('http://localhost:5001')
+
 const loggedOutLinks = document.querySelectorAll('.logged-out');
 const loggedInLinks = document.querySelectorAll('.logged-in');
 const accountDetails = document.querySelector('.account-details');
 const userActionsLinks = document.querySelectorAll('.userActionsInfo');
 const addQuestionActionLink = document.querySelector('.addQuestion-action');
+const downloadQuestionsActionLink = document.querySelector('.downloadAllQuestions-action');
 const generateQuestionPaperActionLink = document.querySelector('.generateQuestionPaper-action');
 const userActionNavigation = document.querySelector('.userActionsNavigation');
 const addQuestionForm = document.querySelector('#addques');
 const generateQuestionPaperForm = document.querySelector('#generateqp');
-
-// for local
-// firebase.functions().useFunctionsEmulator('http://localhost:5001')
+const downloadQuestionsForm = document.querySelector('#downloadques');
 
 const setupUI = (user) => {
     if (user) {
@@ -50,6 +52,7 @@ const setupAddQuestionUI = () => {
     userActionNavigation.style.display = 'block';
     userActionsLinks.forEach(item => item.style.display = 'none');
     addQuestionActionLink.style.display = 'block';
+    downloadQuestionsActionLink.style.display = 'none';
     generateQuestionPaperActionLink.style.display = 'none';
 
     const elements = addQuestionForm.querySelectorAll('select');
@@ -79,12 +82,42 @@ addQuestionForm.addEventListener('submit', (e) => {
         });
 });
 
+// download all questions
+const setupDownloadQuestionsUI = () => {
+    logout.style.display = 'none';
+    userActionNavigation.style.display = 'block';
+    userActionsLinks.forEach(item => item.style.display = 'none');
+    addQuestionActionLink.style.display = 'none';
+    downloadQuestionsActionLink.style.display = 'block';
+    generateQuestionPaperActionLink.style.display = 'none';
+}
+
+downloadQuestionsForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    // get the question info
+    const subjectObject = {
+        subject_code: String(downloadQuestionsForm['subject_code'].value)
+    }
+    const downloadAllQuestions = firebase.functions().httpsCallable('downloadAllQuestions');
+    downloadAllQuestions({ subjectObject: subjectObject })
+        .then(result => {
+            console.log(result);
+            downloadQuestionsForm.reset();
+            downloadFile(`${subjectObject.subject_code}Questions.txt`, result.data);
+        })
+        .catch(err => {
+            M.toast({ html: 'An error has occured please try again' });
+            addQuestionForm.reset();
+        });
+});
+
 // Generate question paper
 const setupGenerateQuestionPaperUI = () => {
     logout.style.display = 'none';
     userActionNavigation.style.display = 'block';
     userActionsLinks.forEach(item => item.style.display = 'none');
     addQuestionActionLink.style.display = 'none';
+    downloadQuestionsActionLink.style.display = 'none';
     generateQuestionPaperActionLink.style.display = 'block';
 
     const elements = generateQuestionPaperForm.querySelectorAll('select');
@@ -107,8 +140,8 @@ generateQuestionPaperForm.addEventListener('submit', async (e) => {
             if (result.data === "") {
                 M.toast({ html: 'An error has occured please try again' });
             } else {
-                addQuestionForm.reset();
-                downloadFile(`${questionPaperObject.exam_type}questionPaper.txt`, result.data);
+                generateQuestionPaperForm.reset();
+                downloadFile(`${questionPaperObject.exam_type}QuestionPaper.txt`, result.data);
             }
         })
         .catch(err => {
@@ -123,6 +156,7 @@ userActionNavigation.addEventListener('click', (e) => {
     userActionNavigation.style.display = 'none';
     userActionsLinks.forEach(item => item.style.display = 'block');
     addQuestionActionLink.style.display = 'none';
+    downloadQuestionsActionLink.style.display = 'none';
     generateQuestionPaperActionLink.style.display = 'none';
 });
 
