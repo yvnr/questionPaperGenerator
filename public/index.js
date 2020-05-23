@@ -1,5 +1,5 @@
-// for local
-firebase.functions().useFunctionsEmulator('http://localhost:5001')
+// // for local
+// firebase.functions().useFunctionsEmulator('http://localhost:5001')
 
 const loggedOutLinks = document.querySelectorAll('.logged-out');
 const loggedInLinks = document.querySelectorAll('.logged-in');

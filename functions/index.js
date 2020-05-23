@@ -1,13 +1,13 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-// admin.initializeApp();
+admin.initializeApp();
 
-// for local
-var serviceAccount = require('./../questionpapergenerator-22e43-firebase-adminsdk-jpw58-4056f6fd97.json');
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: 'https://questionpapergenerator-22e43.firebaseio.com'
-});
+// // for local
+// var serviceAccount = require('./../questionpapergenerator-22e43-firebase-adminsdk-jpw58-4056f6fd97.json');
+// admin.initializeApp({
+//     credential: admin.credential.cert(serviceAccount),
+//     databaseURL: 'https://questionpapergenerator-22e43.firebaseio.com'
+// });
 
 exports.fetchPrivateKey = functions.https.onCall(async (data, context) => {
     try {
@@ -125,7 +125,7 @@ exports.generateQuestionPaper = functions.https.onCall(async (data, context) => 
             questionPaper = '';
         }
         else {
-            shortQuestions.concat(unit_1_2, unit_2_2, unit_3_2, unit_4_2, unit_5_2);
+            shortQuestions = shortQuestions.concat(unit_1_2, unit_2_2, unit_3_2, unit_4_2, unit_5_2);
             longQuestions.push(unit_1_10.join('\nOR\n'), unit_2_10.join('\nOR\n'), unit_3_10.join('\nOR\n'), unit_4_10.join('\nOR\n'), unit_5_10.join('\nOR\n'));
             questionPaper = questionPaper + 'Short Answers\n' + shortQuestions.join('\n') + '\nLong Answers\n' + longQuestions.join('\n');
         }
