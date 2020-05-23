@@ -173,6 +173,7 @@ const fetchAllQuestionsOfGivenSubjectCodeAndLevel = async (data) => {
     const units = ['Unit 1','Unit 2','Unit 3','Unit 4','Unit 5'];
     let ques = [];
     try {
+        /* eslint-disable no-await-in-loop */
         for (let i=0; i < difficulty_levels.length;i++){
             for (let j=0; j < units.length; j++){
                 console.log(difficulty_levels[i], units[j]);
@@ -186,6 +187,7 @@ const fetchAllQuestionsOfGivenSubjectCodeAndLevel = async (data) => {
                 }
             }
         }
+        /* eslint-enable no-await-in-loop */
     } catch (err) {
         console.log(err);
     }
